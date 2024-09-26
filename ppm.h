@@ -12,6 +12,6 @@ typedef struct {
     color *image;
 } PPM_image;
 
-PPM_image parse_PPM_file(const char *filepath);
+PPM_image read_PPM_file(const char *filepath);
 
 #endif  // PPM_H

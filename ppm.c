@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-PPM_image parse_PPM_file(const char *filepath) {
+PPM_image read_PPM_file(const char *filepath) {
     FILE *ppm_file = fopen(filepath, "r");
     if (ppm_file == NULL) {
         fprintf(stderr, "error opening file %s\n", filepath);
@@ -14,15 +14,15 @@ PPM_image parse_PPM_file(const char *filepath) {
     char ppm_format[3] = {0};
 
     if (fscanf(ppm_file, "%s", ppm_format) != 1) {
-        fprintf(stderr, "Error reading ppm format from file\n");
         fclose(ppm_file);
+        fprintf(stderr, "Error reading ppm format from file\n");
         exit(1);
     }
 
     if (!strcmp(ppm_format, "P3")) {
-        fprintf(stderr, "unsupported ppm file format: %s, on supports P3",
-                ppm_format);
         fclose(ppm_file);
+        fprintf(stderr, "unsupported ppm file format: %s, only supports P3",
+                ppm_format);
         exit(1);
     }
 
@@ -36,8 +36,8 @@ PPM_image parse_PPM_file(const char *filepath) {
 
     for (uint32_t i = 0; i < width * height; ++i) {
         if (fscanf(ppm_file, "%d%d%d", &r, &g, &b) != 3) {
-            fprintf(stderr, "error reading values\n");
             fclose(ppm_file);
+            fprintf(stderr, "error reading values\n");
             exit(1);
         }
         image[i] = (color){
@@ -60,7 +60,8 @@ color PPM_get_pixel(PPM_image ppm_image, uint32_t x, uint32_t y) {
     if (x < 0 || x >= ppm_image.width || y < 0 || y >= ppm_image.height) {
         fprintf(
             stderr,
-            "coordinates (%d, %d) out of bounds reading ppm image (%d, %d)\n",
+            "coordinates (%d, %d) out of bounds reading ppm image of dimension "
+            "(%d, %d)\n",
             x, y, ppm_image.width, ppm_image.height);
         exit(1);
     }
