@@ -1,0 +1,106 @@
+Relax Function
+
+// params:
+//   a : vertex 1
+//   b : vertex 2
+//   n : edge weight between a and b
+
+R(a, b, n) {
+    if (d[b] > d[a] + n) {  // Check if this path is shorter than present
+        d[b] = d[a] + n;    // Reassign new best path
+        p(b) = a;
+    }
+}
+
+a -> b
+  2
+
+a -> c
+  12
+
+b -> c
+  8
+
+
+
+R(b, c, 8) {
+    //  12     2      8
+    if (d[c] > d[b] + w(b, c)) {
+        d[c] = d[b] + w(b, c);
+        p(c) = b;
+    }
+}
+
+R(b, e, 9) {
+    //  inf    2      9
+    If (d[e] > d[b] + w(b, e)) {
+        d[e] = d[b] + w(b, e);
+        p(e) = b;
+    }
+}
+
+R(c, e, 9) {
+        11     10     3
+    if (d[e] > d[c] + w(c,e)) {
+        d[e] = d[c] + w(c,e);
+        p(e) = c; // does not occur
+    }
+}
+
+
+R(c, d, 6) {
+        
+    if (d[d] > d[c] + w(c,d)) {
+        d[e] = d[b] + w(b, e);
+        p(d) = c;
+    }
+}
+
+R(e, d, 2) {
+    //  16     11     2
+    if (d[d] > d[e] + w(e,d)) {
+        d[d] = d[e] + w(e, d);
+        p(d) = e;
+    }
+}
+
+iter | P[v] | d[a] | d[b] | d[c] | d[d] | d[e]
+-----+------+------+------+------+------+------
+0    | -    | 0    | inf  | inf  | inf  | inf
+1    | a    | 2a   | 12a  | inf  | inf  | inf
+2    | b    | -    | -    | 10b  | inf  | 11b
+3    | c    | -    | -    | -    | 16c  | 11b
+4    | e    | -    | -    | -    | 13e  | -
+5    | d    | -    | -    | -    | -    | -
+
+        A
+       /
+      B
+     / \
+    C   E
+       /
+      D
+
+Dijkstra(G, w, s):
+    Initialize-Single-Source(G, s)
+    S = 0
+    initialize heap-based adaptable Q to contain all v in V
+
+    while (Q /= 0) {
+        u = Extract-Min(Q)                                      // O(log(n))
+        S = S \cup {u}
+        for (each vertex v in Adj[u]) {
+            r = Relax(u, v, w)
+            if (r) Update-Heap(Q)                               // O(mlog(n))
+        }                                                       // O(nlog(n) + mlog(n))
+    }                                                           // O((m+n)log(n))
+
+For dense & connected G: m > n
+    O(mlog(n))
+
+Dijkstra's Algorithm
+
+Theorem:
+If we run the algorithm on a weighted directed graph G = (V, E)
+with a nonnegative weight function w and a source s, then at
+termination, d[u] = \delta(s, u) for all vertices u in V.
